@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGRIMATCH - Platform Pemasaran Pertanian Digital</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Market Price & Supply Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        agri: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            dark: '#0f291e',
+                        },
+                        earth: {
+                            50: '#fffbeed',
+                            100: '#fef3c7',
+                            500: '#d97706',
+                            700: '#b45309',
+                            800: '#78350f'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(22, 163, 74, 0.15);
+        }
+        .hero-bg {
+            background: radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 20% 80%, rgba(217, 119, 6, 0.1) 0%, transparent 50%),
+                        #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-agri-500 selection:text-white">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Navigation Header -->
+    <nav class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-agri-700 to-agri-500 flex items-center justify-center text-white shadow-lg shadow-agri-600/30">
+                        <i class="fa-solid fa-seedling text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-agri-800 via-agri-600 to-earth-700 bg-clip-text text-transparent">AGRIMATCH</span>
+                        <span class="block text-[10px] uppercase tracking-widest font-bold text-agri-700 -mt-1">Smart Agritech Platform</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+                    <a href="#fitur" class="hover:text-agri-600 transition-colors">Kapabilitas</a>
+                    <a href="#simulator" class="hover:text-agri-600 transition-colors">Simulasi Matching</a>
+                    <a href="#peran" class="hover:text-agri-600 transition-colors">Portal Pengguna</a>
+                    <a href="#pasar" class="hover:text-agri-600 transition-colors">Transparansi Harga</a>
+                </div>
+
+                <!-- Action Button -->
+                <div class="hidden sm:flex items-center gap-3">
+                    <a href="#simulator" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-agri-50 text-agri-700 hover:bg-agri-100 transition-all border border-agri-200">
+                        Coba Demo
+                    </a>
+                    <a href="#peran" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-agri-600 to-agri-700 hover:from-agri-700 hover:to-agri-800 shadow-md shadow-agri-600/20 transition-all">
+                        Masuk Portal <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3">
+            <a href="#fitur" class="block py-2 text-slate-600 font-semibold hover:text-agri-600">Kapabilitas Platform</a>
+            <a href="#simulator" class="block py-2 text-slate-600 font-semibold hover:text-agri-600">Simulasi Matching</a>
+            <a href="#peran" class="block py-2 text-slate-600 font-semibold hover:text-agri-600">Portal Pengguna</a>
+            <a href="#pasar" class="block py-2 text-slate-600 font-semibold hover:text-agri-600">Transparansi Harga</a>
+            <div class="pt-2 flex flex-col gap-2">
+                <a href="#peran" class="w-full text-center px-4 py-2.5 rounded-xl font-bold text-white bg-agri-600">Masuk Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28 border-b border-slate-200/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Text Column -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-agri-100/80 border border-agri-300 text-agri-800 text-xs font-bold tracking-wide uppercase">
+                        <span class="w-2 h-2 rounded-full bg-agri-500 animate-pulse"></span>
+                        Platform Pemasaran Pertanian Digital Direct-to-Market
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
+                        Jembatan Direct Antara <span class="bg-gradient-to-r from-agri-600 via-agri-700 to-earth-700 bg-clip-text text-transparent">Petani Lokal</span> & <span class="text-agri-800">Pembeli</span>
+                    </h1>
+                    
+                    <p class="text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+                        AGRIMATCH menyederhanakan rantai pasok pertanian Indonesia melalui <strong class="text-slate-800 font-semibold">Pencocokan Produk Otomatis</strong> dan <strong class="text-slate-800 font-semibold">Rekomendasi Berbasis Lokasi</strong>. Pangkas perantara, kurangi limbah pascapanen, dan dapatkan kepastian harga adil.
+                    </p>
+
+                    <div class="pt-2 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="#simulator" class="px-7 py-4 rounded-xl font-bold text-white bg-gradient-to-r from-agri-600 to-agri-700 hover:from-agri-700 hover:to-agri-800 shadow-xl shadow-agri-600/30 hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-bolt"></i> Simulasikan Matching
+                        </a>
+                        <a href="#peran" class="px-7 py-4 rounded-xl font-bold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 shadow-sm transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-users"></i> Pilih Peran Pengguna
+                        </a>
+                    </div>
+
+                    <!-- Impact Stats Badges -->
+                    <div class="pt-8 border-t border-slate-200/80 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
+                        <div class="p-3 bg-white/60 rounded-xl border border-slate-200/50">
+                            <div class="text-2xl font-black text-agri-700">12.400+</div>
+                            <div class="text-xs text-slate-500 font-semibold">Petani Terhubung</div>
+                        </div>
+                        <div class="p-3 bg-white/60 rounded-xl border border-slate-200/50">
+                            <div class="text-2xl font-black text-agri-700">8.500+</div>
+                            <div class="text-xs text-slate-500 font-semibold">Ton Pasokan Terjual</div>
+                        </div>
+                        <div class="p-3 bg-white/60 rounded-xl border border-slate-200/50">
+                            <div class="text-2xl font-black text-earth-700">98,4%</div>
+                            <div class="text-xs text-slate-500 font-semibold">Akurasi Match AI</div>
+                        </div>
+                        <div class="p-3 bg-white/60 rounded-xl border border-slate-200/50">
+                            <div class="text-2xl font-black text-agri-700">-35%</div>
+                            <div class="text-xs text-slate-500 font-semibold">Biaya Logistik</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Visual Banner Card -->
+                <div class="lg:col-span-5">
+                    <div class="relative mx-auto max-w-md lg:max-w-none">
+                        <!-- Decorative Backdrop Glowing Ring -->
+                        <div class="absolute -top-6 -left-6 w-72 h-72 bg-agri-300 rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-pulse"></div>
+                        <div class="absolute -bottom-6 -right-6 w-72 h-72 bg-earth-100 rounded-full mix-blend-multiply filter blur-2xl opacity-50"></div>
+                        
+                        <div class="relative glass-card rounded-3xl p-6 shadow-2xl space-y-5">
+                            <div class="flex items-center justify-between pb-4 border-b border-slate-200/70">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-agri-100 flex items-center justify-center text-agri-700">
+                                        <i class="fa-solid fa-radar text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-slate-800 text-sm">Automated Match Radar</h3>
+                                        <p class="text-xs text-slate-500">Live Regional Matching Stream</p>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-green-100 text-green-700 border border-green-300">
+                                    ONLINE
+                                </span>
+                            </div>
+
+                            <!-- Mock Match Live Feed Cards -->
+                            <div class="space-y-3">
+                                <div class="p-3.5 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-9 h-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs">
+                                            🌶️
+                                        </div>
+                                        <div>
+                                            <div class="text-xs font-bold text-slate-800">Cabai Keriting Red Super</div>
+                                            <div class="text-[11px] text-slate-500">Poktan Subur Jaya (Brebes) &rarr; Restoran Solaria</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xs font-extrabold text-agri-600 bg-agri-50 px-2 py-0.5 rounded-md border border-agri-200">
+                                            99% Match
+                                        </span>
+                                        <div class="text-[10px] text-slate-400 mt-0.5">Radius 12 km</div>
+                                    </div>
+                                </div>
+
+                                <div class="p-3.5 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                                            🌾
+                                        </div>
+                                        <div>
+                                            <div class="text-xs font-bold text-slate-800">Beras Pandan Wangi Grade A</div>
+                                            <div class="text-[11px] text-slate-500">Koperasi Tani Cianjur &rarr; Supermarket Papaya</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xs font-extrabold text-agri-600 bg-agri-50 px-2 py-0.5 rounded-md border border-agri-200">
+                                            96% Match
+                                        </span>
+                                        <div class="text-[10px] text-slate-400 mt-0.5">Radius 28 km</div>
+                                    </div>
+                                </div>
+
+                                <div class="p-3.5 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-9 h-9 rounded-full bg-red-100 text-red-700 flex items-center justify-center font-bold text-xs">
+                                            🍅
+                                        </div>
+                                        <div>
+                                            <div class="text-xs font-bold text-slate-800">Tomat Hydroponic Premium</div>
+                                            <div class="text-[11px] text-slate-500">Petani Lembang &rarr; Hotel Trans Luxury</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xs font-extrabold text-agri-600 bg-agri-50 px-2 py-0.5 rounded-md border border-agri-200">
+                                            98% Match
+                                        </span>
+                                        <div class="text-[10px] text-slate-400 mt-0.5">Radius 8 km</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-slate-900 text-white rounded-2xl text-xs flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-truck-fast text-agri-400"></i>
+                                    <span>Logistik Terjadwal: <strong>45 Pengiriman Hari Ini</strong></span>
+                                </div>
+                                <span class="text-agri-400 font-bold">100% On-time</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Capabilities (Kapabilitas Utama) Section -->
+    <section id="fitur" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+                <span class="px-3.5 py-1.5 rounded-full bg-agri-100 text-agri-800 text-xs font-extrabold uppercase tracking-wider">
+                    Kapabilitas Utama Platform
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Fitur Cerdas Menyederhanakan Ekosistem Pertanian
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Dirancang untuk mengatasi inefisiensi rantai pasok konvensional, menekan limbah hasil panen, dan memaksimalkan pendapatan petani lokal.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Feature 1 -->
+                <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 hover:border-agri-400 hover:shadow-xl hover:shadow-agri-600/5 transition-all group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-agri-100 text-agri-700 flex items-center justify-center text-2xl font-bold mb-6 group-hover:scale-110 group-hover:bg-agri-600 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">Pencocokan Produk Otomatis</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Algoritma pintar yang memasangkan pasokan hasil panen dari petani dengan permintaan aktif pembeli secara real-time berdasarkan komoditas, volume, grade mutu, & tanggal panen.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-200 text-xs font-bold text-agri-700 flex items-center gap-1">
+                        <span>Kurangi Limbah Pascapanen</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 hover:border-agri-400 hover:shadow-xl hover:shadow-agri-600/5 transition-all group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-earth-100 text-earth-700 flex items-center justify-center text-2xl font-bold mb-6 group-hover:scale-110 group-hover:bg-earth-500 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">Rekomendasi Berbasis Lokasi</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Memanfaatkan geolokasi untuk memprioritaskan transaksi produsen dan pembeli terdekat. Menekan biaya transportasi logistik dan menjaga kesegaran mutu produk panen.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-200 text-xs font-bold text-earth-700 flex items-center gap-1">
+                        <span>Efisiensi Rute Logistik</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 hover:border-agri-400 hover:shadow-xl hover:shadow-agri-600/5 transition-all group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl font-bold mb-6 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">Akses Pasar & Transparansi Harga</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Memangkas perantara tengkulak yang tidak perlu dengan memberikan visibilitas tren harga acuan pasar transparan serta jaminan kesepakatan nilai yang adil bagi petani.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-200 text-xs font-bold text-emerald-700 flex items-center gap-1">
+                        <span>Patokan Harga Adil (Fair Price)</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 hover:border-agri-400 hover:shadow-xl hover:shadow-agri-600/5 transition-all group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold mb-6 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-truck-ramp-box"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">Koordinasi Pesanan & Logistik</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Sistem pemantauan status pesanan terintegrasi dari komitmen panen, verifikasi mutu, hingga penjemputan & pengantaran untuk petani perorangan maupun Koperasi.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-200 text-xs font-bold text-blue-700 flex items-center gap-1">
+                        <span>Melacak Penjemputan Real-time</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Match Simulator Section -->
+    <section id="simulator" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:24px_24px] opacity-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+                <span class="px-3.5 py-1.5 rounded-full bg-agri-900 text-agri-300 text-xs font-extrabold uppercase tracking-wider border border-agri-700">
+                    Live Demo Algorithm
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                    Simulasikan Automated Product Matching
+                </h2>
+                <p class="text-slate-400 text-base">
+                    Uji coba bagaimana mesin pencocokan AGRIMATCH secara instan menghubungkan pasokan panen dengan kebutuhan pembeli terdekat.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Input Controls Box -->
+                <div class="lg:col-span-5 bg-slate-800/90 rounded-3xl p-6 sm:p-8 border border-slate-700 shadow-2xl backdrop-blur-md">
+                    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-agri-400"></i> Parameter Input Simulasi
+                    </h3>
+
+                    <form id="sim-form" onsubmit="runSimulation(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Peran Pengisi</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" id="role-farmer-btn" onclick="setSimRole('farmer')" class="py-2 px-3 rounded-xl text-xs font-bold bg-agri-600 text-white border border-agri-500 transition-all">
+                                    👨‍🌾 Petani / Koperasi
+                                </button>
+                                <button type="button" id="role-buyer-btn" onclick="setSimRole('buyer')" class="py-2 px-3 rounded-xl text-xs font-bold bg-slate-700 text-slate-300 hover:bg-slate-600 border border-slate-600 transition-all">
+                                    🏢 Pembeli / Restoran
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Pilih Komoditas Utama</label>
+                            <select id="sim-commodity" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl p-3 focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                                <option value="Cabai Merah Keriting">Cabai Merah Keriting (Segar)</option>
+                                <option value="Bawang Merah Brebes">Bawang Merah Brebes Grade A</option>
+                                <option value="Beras Pandan Wangi">Beras Pandan Wangi Organik</option>
+                                <option value="Tomat Servo Hydroponic">Tomat Servo Hydroponic</option>
+                                <option value="Jagung Manis Super">Jagung Manis Pipil Super</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Lokasi Wilayah</label>
+                                <select id="sim-location" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl p-3 focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                                    <option value="Brebes">Brebes, Jawa Tengah</option>
+                                    <option value="Bandung">Bandung, Jawa Barat</option>
+                                    <option value="Cianjur">Cianjur, Jawa Barat</option>
+                                    <option value="Malang">Malang, Jawa Timur</option>
+                                    <option value="Bogor">Bogor, Jawa Barat</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Volume (Kg)</label>
+                                <input type="number" id="sim-volume" value="500" min="50" step="50" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl p-3 focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Kualitas Grade</label>
+                                <select id="sim-grade" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl p-3 focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                                    <option value="Grade A (Super Premium)">Grade A (Super)</option>
+                                    <option value="Grade B (Standar Pasar)">Grade B (Standar)</option>
+                                    <option value="Grade C (Olahan/Industri)">Grade C (Olahan)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">Radius Max (Km)</label>
+                                <input type="number" id="sim-radius" value="35" min="5" max="200" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl p-3 focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <button type="submit" id="sim-submit-btn" class="w-full mt-4 py-3.5 px-6 rounded-xl font-bold bg-gradient-to-r from-agri-500 to-agri-600 hover:from-agri-600 hover:to-agri-700 text-white shadow-lg shadow-agri-500/25 transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Jalankan Engine Match
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Simulation Dynamic Output Results Box -->
+                <div class="lg:col-span-7 bg-slate-800/60 rounded-3xl p-6 sm:p-8 border border-slate-700 min-h-[460px] flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-700">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-square-poll-vertical text-agri-400"></i> Hasil Pencocokan Otomatis
+                            </h3>
+                            <span id="sim-status-tag" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-700 text-slate-300">
+                                Ready to Scan
+                            </span>
+                        </div>
+
+                        <!-- Scan Animation Loading Screen -->
+                        <div id="sim-loader" class="hidden py-16 text-center space-y-4">
+                            <div class="relative w-20 h-20 mx-auto">
+                                <div class="absolute inset-0 rounded-full border-4 border-agri-500/20 border-t-agri-400 animate-spin"></div>
+                                <div class="absolute inset-2 rounded-full border-4 border-earth-500/20 border-b-earth-500 animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
+                                <div class="w-full h-full flex items-center justify-center text-agri-400 text-xl">
+                                    <i class="fa-solid fa-satellite-dish animate-bounce"></i>
+                                </div>
+                            </div>
+                            <p class="text-sm font-semibold text-agri-300 animate-pulse">
+                                Memindai Database Geolocation & Permintaan Pembeli...
+                            </p>
+                        </div>
+
+                        <!-- Main Results Output Area -->
+                        <div id="sim-results" class="py-6 space-y-4">
+                            <!-- Dynamic Content Rendered Here via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Footnote Notice -->
+                    <div class="pt-4 border-t border-slate-700 text-xs text-slate-400 flex items-center justify-between">
+                        <span><i class="fa-solid fa-shield-halved text-agri-400 mr-1"></i> Data diperbarui secara real-time dari Agregator Wilayah</span>
+                        <span class="text-agri-400 font-semibold">Algoritma V3.4</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Main User Roles (Peran Pengguna Utama & Portals) Section -->
+    <section id="peran" class="py-20 bg-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+                <span class="px-3.5 py-1.5 rounded-full bg-agri-100 text-agri-800 text-xs font-extrabold uppercase tracking-wider">
+                    Peran Pengguna Utama
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Ekosistem yang Dirancang Khusus per Peran
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Pilih portal peran Anda di bawah ini untuk mensimulasikan aktivitas operasional harian di dalam platform AGRIMATCH.
+                </p>
+            </div>
+
+            <!-- Role Selector Tabs Buttons -->
+            <div class="flex justify-center mb-8">
+                <div class="inline-flex p-1.5 bg-white rounded-2xl shadow-sm border border-slate-200 gap-2 max-w-full overflow-x-auto custom-scrollbar">
+                    <button id="tab-petani-btn" onclick="switchRoleTab('petani')" class="px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap bg-agri-600 text-white shadow-md">
+                        <i class="fa-solid fa-tractor"></i> Petani / Koperasi
+                    </button>
+                    <button id="tab-pembeli-btn" onclick="switchRoleTab('pembeli')" class="px-5 py-3 rounded-xl font-bold text-sm text-slate-600 hover:text-agri-600 transition-all flex items-center gap-2 whitespace-nowrap">
+                        <i class="fa-solid fa-store"></i> Pembeli (B2B & B2C)
+                    </button>
+                    <button id="tab-admin-btn" onclick="switchRoleTab('admin')" class="px-5 py-3 rounded-xl font-bold text-sm text-slate-600 hover:text-agri-600 transition-all flex items-center gap-2 whitespace-nowrap">
+                        <i class="fa-solid fa-chart-pie"></i> Admin / Agregator
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Portal Container -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xl">
+                
+                <!-- PORTAL 1: PETANI / KOPERASI -->
+                <div id="portal-petani" class="space-y-8">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-slate-200 gap-4">
+                        <div>
+                            <div class="inline-flex items-center gap-2 text-xs font-bold text-agri-700 bg-agri-50 px-3 py-1 rounded-full border border-agri-200 mb-1">
+                                <i class="fa-solid fa-user-check"></i> Portal Petani & Koperasi Lokal
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-900">Kelola Hasil Panen & Terima Pesanan Match</h3>
+                        </div>
+                        <button onclick="openHarvestModal()" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-agri-600 hover:bg-agri-700 text-white shadow-md transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Daftarkan Hasil Panen Baru
+                        </button>
+                    </div>
+
+                    <!-- Farmers Summary Metrics -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                            <div class="text-xs font-semibold text-slate-500">Panen Aktif Terdaftar</div>
+                            <div class="text-2xl font-black text-slate-800 mt-1" id="petani-stat-total">3 Lot (2.800 Kg)</div>
+                            <div class="text-[11px] text-agri-600 mt-1 font-semibold"><i class="fa-solid fa-check"></i> 100% Terverifikasi Quality</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-agri-50/60 border border-agri-200">
+                            <div class="text-xs font-semibold text-agri-800">Permintaan Match Masuk</div>
+                            <div class="text-2xl font-black text-agri-700 mt-1" id="petani-stat-match">4 Permintaan Pembeli</div>
+                            <div class="text-[11px] text-agri-600 mt-1 font-semibold"><i class="fa-solid fa-bolt"></i> Siap Disetujui</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-earth-50 border border-earth-100">
+                            <div class="text-xs font-semibold text-earth-800">Perkiraan Pendapatan Bersih</div>
+                            <div class="text-2xl font-black text-earth-700 mt-1">Rp 74.500.000</div>
+                            <div class="text-[11px] text-earth-700 mt-1 font-semibold"><i class="fa-solid fa-hand-holding-dollar"></i> Sesuai Harga Acuan</div>
+                        </div>
+                    </div>
+
+                    <!-- Active Harvest Listings Table -->
+                    <div>
+                        <h4 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-agri-600"></i> Daftar Hasil Panen Anda
+                        </h4>
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                            <table class="w-full text-left text-sm text-slate-600">
+                                <thead class="bg-slate-50 text-xs font-bold uppercase text-slate-500 border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-4">Komoditas</th>
+                                        <th class="p-4">Volume & Grade</th>
+                                        <th class="p-4">Tgl Panen</th>
+                                        <th class="p-4">Harga Target / Kg</th>
+                                        <th class="p-4">Match Terbaik Pembeli</th>
+                                        <th class="p-4 text-right">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="petani-harvest-table" class="divide-y divide-slate-200 bg-white">
+                                    <!-- Dynamic rows inserted by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PORTAL 2: PEMBELI (B2B & B2C) -->
+                <div id="portal-pembeli" class="hidden space-y-8">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-slate-200 gap-4">
+                        <div>
+                            <div class="inline-flex items-center gap-2 text-xs font-bold text-earth-700 bg-earth-50 px-3 py-1 rounded-full border border-earth-100 mb-1">
+                                <i class="fa-solid fa-bag-shopping"></i> Portal Pembeli (Restoran, Pengecer, Supermarket)
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-900">Cari & Unggah Kebutuhan Pasokan Rutin</h3>
+                        </div>
+                        <button onclick="openBuyerDemandModal()" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-earth-500 hover:bg-earth-700 text-white shadow-md transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-plus-circle"></i> Unggah Kebutuhan Baru
+                        </button>
+                    </div>
+
+                    <!-- Search & Filter Controls -->
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="md:col-span-2 relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
+                            <input type="text" id="buyer-search-input" onkeyup="filterBuyerCatalog()" placeholder="Cari komoditas (Cabai, Bawang, Tomat, Beras...)" class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <select id="buyer-radius-filter" onchange="filterBuyerCatalog()" class="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                                <option value="all">Semua Radius Lokasi</option>
+                                <option value="15">&lt; 15 Km (Sangat Dekat)</option>
+                                <option value="35">&lt; 35 Km (Satu Kabupaten)</option>
+                                <option value="100">&lt; 100 Km (Regional)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <select id="buyer-grade-filter" onchange="filterBuyerCatalog()" class="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                                <option value="all">Semua Grade</option>
+                                <option value="Grade A">Grade A (Super)</option>
+                                <option value="Grade B">Grade B (Standar)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Produce Supply Marketplace Cards -->
+                    <div id="buyer-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- PORTAL 3: ADMIN PLATFORM / AGREGATOR -->
+                <div id="portal-admin" class="hidden space-y-8">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-slate-200 gap-4">
+                        <div>
+                            <div class="inline-flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-full border border-slate-300 mb-1">
+                                <i class="fa-solid fa-shield-halved"></i> Control Room Agregator Regional
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-900">Keseimbangan Pasokan-Permintaan & Verifikasi</h3>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="px-3 py-1.5 rounded-xl bg-green-100 text-green-800 font-bold text-xs flex items-center gap-1.5 border border-green-300">
+                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Network Health 99.8%
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Admin KPI Metrics Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                        <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                            <div class="text-xs font-semibold text-slate-500">Total Produsen Terverifikasi</div>
+                            <div class="text-2xl font-black text-slate-800 mt-1">1.482 Poktan</div>
+                            <div class="text-[11px] text-green-600 mt-1"><i class="fa-solid fa-circle-check"></i> 12 Menunggu Approval</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                            <div class="text-xs font-semibold text-slate-500">Volume Transaksi Bulan Ini</div>
+                            <div class="text-2xl font-black text-agri-700 mt-1">1.240 Ton</div>
+                            <div class="text-[11px] text-agri-600 mt-1"><i class="fa-solid fa-arrow-trend-up"></i> +18.4% vs bulan lalu</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                            <div class="text-xs font-semibold text-slate-500">Tingkat Ketepatan Pengiriman</div>
+                            <div class="text-2xl font-black text-blue-700 mt-1">97.6%</div>
+                            <div class="text-[11px] text-blue-600 mt-1"><i class="fa-solid fa-truck-fast"></i> Logistik Terintegrasi</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                            <div class="text-xs font-semibold text-slate-500">Indeks Transparansi Harga</div>
+                            <div class="text-2xl font-black text-earth-700 mt-1">99.1</div>
+                            <div class="text-[11px] text-earth-700 mt-1"><i class="fa-solid fa-scale-balanced"></i> Tanpa Tengkulak</div>
+                        </div>
+                    </div>
+
+                    <!-- Regional Supply vs Demand Chart & Verification Pipeline -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        
+                        <!-- Chart Container -->
+                        <div class="lg:col-span-7 bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                            <h4 class="font-bold text-slate-800 mb-2 flex items-center justify-between">
+                                <span><i class="fa-solid fa-chart-bar text-agri-600 mr-2"></i> Keseimbangan Pasokan vs Permintaan Regional</span>
+                                <span class="text-xs font-normal text-slate-500">Satuan: Ton</span>
+                            </h4>
+                            <div class="h-64">
+                                <canvas id="adminBalanceChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Producer Verification List -->
+                        <div class="lg:col-span-5 bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-4 flex items-center justify-between">
+                                    <span><i class="fa-solid fa-user-shield text-earth-700 mr-2"></i> Antrean Verifikasi Produsen</span>
+                                    <span class="px-2 py-0.5 rounded-full text-[11px] bg-amber-100 text-amber-800 font-bold">3 Pending</span>
+                                </h4>
+                                <div class="space-y-3" id="admin-verify-list">
+                                    <!-- Dynamic Items -->
+                                </div>
+                            </div>
+                            <button onclick="showToast('Semua verifikasi antrean berhasil diproses!', 'success')" class="w-full mt-4 py-2.5 text-xs font-bold bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-all">
+                                Verifikasi Semua Produsen Lulus Uji
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Price Transparency & Benchmark Section (Akses Pasar Langsung & Transparansi Harga) -->
+    <section id="pasar" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-5 space-y-6">
+                    <span class="px-3.5 py-1.5 rounded-full bg-earth-100 text-earth-800 text-xs font-extrabold uppercase tracking-wider">
+                        Transparansi Harga Real-time
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                        Patokan Harga Fair Price Tanpa Perantara Tengkulak
+                    </h2>
+                    <p class="text-slate-600 text-base leading-relaxed">
+                        AGRIMATCH mempublikasikan Indeks Harga Acuan Tingkat Petani secara terbuka. Hal ini memberikan kepastian keuntungan margin yang layak bagi produsen lokal dan harga hemat bagi pembeli grosir maupun ritel.
+                    </p>
+
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-200">
+                            <div class="w-8 h-8 rounded-xl bg-agri-100 text-agri-700 flex items-center justify-center font-bold text-sm shrink-0">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-800">Pembaruan Data Pasar Harian</h4>
+                                <p class="text-xs text-slate-500">Dikompilasi langsung dari transaksi agregator wilayah dan pasar induk.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-200">
+                            <div class="w-8 h-8 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center font-bold text-sm shrink-0">
+                                <i class="fa-solid fa-handshake font-bold"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-800">Margin Adil Berimbang</h4>
+                                <p class="text-xs text-slate-500">Petani menerima +25-40% lebih tinggi dibanding menjual ke perantara liar.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Benchmark Chart Card -->
+                <div class="lg:col-span-7">
+                    <div class="bg-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-2xl border border-slate-800">
+                        <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
+                            <div>
+                                <h3 class="text-lg font-bold text-white">Perbandingan Harga Panen: Pasar Tradisional vs AGRIMATCH</h3>
+                                <p class="text-xs text-slate-400">Rata-rata Harga Komoditas Utama (Rp / Kg)</p>
+                            </div>
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-agri-900 text-agri-300 border border-agri-700">
+                                Live Benchmark
+                            </span>
+                        </div>
+                        <div class="h-72">
+                            <canvas id="priceComparisonChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Order & Logistics Modal / Overlay (Dynamic Dialogs) -->
+    <div id="harvest-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in duration-200">
+            <button onclick="closeHarvestModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-agri-100 text-agri-700 flex items-center justify-center text-lg font-bold">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900">Daftarkan Pasokan Panen Baru</h3>
+                    <p class="text-xs text-slate-500">Sistem akan otomatis mencocokkan dengan pembeli terdekat</p>
+                </div>
+            </div>
+
+            <form onsubmit="submitNewHarvest(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Nama Komoditas</label>
+                    <input type="text" id="modal-harvest-name" required placeholder="Contoh: Cabai Rawit Merah Subang" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Volume (Kg)</label>
+                        <input type="number" id="modal-harvest-vol" required min="10" placeholder="1000" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Grade Kualitas</label>
+                        <select id="modal-harvest-grade" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                            <option value="Grade A">Grade A (Super)</option>
+                            <option value="Grade B">Grade B (Standar)</option>
+                            <option value="Grade C">Grade C (Olahan)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Harga Target (/Kg)</label>
+                        <input type="number" id="modal-harvest-price" required placeholder="32000" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Tgl Estimasi Panen</label>
+                        <input type="date" id="modal-harvest-date" required class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-agri-500 focus:outline-none">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-3.5 px-6 rounded-xl font-bold bg-agri-600 hover:bg-agri-700 text-white shadow-lg shadow-agri-600/30 transition-all">
+                    Simpan & Jalankan Matching Otomatis
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-16 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-agri-600 flex items-center justify-center text-white font-bold">
+                            <i class="fa-solid fa-seedling text-lg"></i>
+                        </div>
+                        <span class="text-xl font-extrabold text-white tracking-tight">AGRIMATCH</span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Platform pemasaran pertanian digital terdepan di Indonesia. Menjembatani petani lokal dan pembeli dengan teknologi pencocokan otomatis & rekomendasi lokasi cerdas.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-white mb-4">Navigasi Platform</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#fitur" class="hover:text-agri-400 transition-colors">Pencocokan Otomatis</a></li>
+                        <li><a href="#fitur" class="hover:text-agri-400 transition-colors">Rekomendasi Lokasi</a></li>
+                        <li><a href="#pasar" class="hover:text-agri-400 transition-colors">Transparansi Harga</a></li>
+                        <li><a href="#peran" class="hover:text-agri-400 transition-colors">Koordinasi Logistik</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-white mb-4">Peran Pengguna</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#peran" onclick="switchRoleTab('petani')" class="hover:text-agri-400 transition-colors">Portal Petani & Koperasi</a></li>
+                        <li><a href="#peran" onclick="switchRoleTab('pembeli')" class="hover:text-agri-400 transition-colors">Portal Pembeli B2B / B2C</a></li>
+                        <li><a href="#peran" onclick="switchRoleTab('admin')" class="hover:text-agri-400 transition-colors">Agregator & Admin Platform</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-white mb-4">Kontak & Bantuan</h4>
+                    <p class="text-xs text-slate-400 mb-2"><i class="fa-solid fa-envelope mr-1 text-agri-400"></i> bantuan@agrimatch.id</p>
+                    <p class="text-xs text-slate-400 mb-2"><i class="fa-solid fa-phone mr-1 text-agri-400"></i> +62 811-2345-6789</p>
+                    <p class="text-xs text-slate-400"><i class="fa-solid fa-location-dot mr-1 text-agri-400"></i> Jakarta & Bandung Agritech Hub</p>
+                </div>
+            </div>
+            <div class="pt-8 text-center text-xs text-slate-500">
+                &copy; 2026 AGRIMATCH Platform Pemasaran Pertanian Digital. Seluruh hak cipta dilindungi undang-undang.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Application Logic Script -->
+    <script>
+        // State Store
+        let simRole = 'farmer';
+        
+        let harvestList = [
+            { id: 1, commodity: 'Cabai Merah Keriting', volume: 1200, grade: 'Grade A', date: '2026-11-15', price: 34000, match: 'Restoran Sambal Solaria (99%)', matchDistance: '12 km' },
+            { id: 2, commodity: 'Bawang Merah Brebes', volume: 800, grade: 'Grade A', date: '2026-11-18', price: 28000, match: 'Supermarket Hero Group (96%)', matchDistance: '24 km' },
+            { id: 3, commodity: 'Tomat Hydroponic Servo', volume: 800, grade: 'Grade B', date: '2026-11-14', price: 14000, match: 'Katering Sehat Catering (94%)', matchDistance: '8 km' }
+        ];
+
+        let buyerCatalog = [
+            { id: 101, name: 'Cabai Merah Keriting Super', farmer: 'Poktan Subur Jaya (Brebes)', distance: 12, grade: 'Grade A', price: 34000, volAvailable: '1.200 kg', harvestDate: '15 Nov 2026' },
+            { id: 102, name: 'Bawang Merah Brebes Fresh', farmer: 'Koperasi Tani Makmur', distance: 24, grade: 'Grade A', price: 28000, volAvailable: '800 kg', harvestDate: '18 Nov 2026' },
+            { id: 103, name: 'Beras Pandan Wangi Organik', farmer: 'Koperasi Sertifikasi Cianjur', distance: 32, grade: 'Grade A', price: 16500, volAvailable: '5.000 kg', harvestDate: 'Siap Penjemputan' },
+            { id: 104, name: 'Tomat Hydroponic Servo', farmer: 'Mitra Tani Lembang', distance: 8, grade: 'Grade B', price: 14000, volAvailable: '800 kg', harvestDate: '14 Nov 2026' },
+            { id: 105, name: 'Jagung Manis Pipil Segar', farmer: 'Poktan Harapan Kediri', distance: 45, grade: 'Grade A', price: 9500, volAvailable: '3.500 kg', harvestDate: '20 Nov 2026' },
+            { id: 106, name: 'Kentang Granola Dieng', farmer: 'Koperasi Dataran Tinggi', distance: 68, grade: 'Grade A', price: 18000, volAvailable: '2.000 kg', harvestDate: '22 Nov 2026' }
+        ];
+
+        let adminVerifications = [
+            { id: 201, groupName: 'Poktan Tani Mandiri Subang', commodity: 'Nanas & Padi', location: 'Subang, Jabar', members: 42 },
+            { id: 202, groupName: 'Koperasi Hortikultura Garut', commodity: 'Cabai & Jeruk', location: 'Garut, Jabar', members: 68 },
+            { id: 203, groupName: 'Kelompok Tani Hydro Green', commodity: 'Sayur Leafy Hydroponic', location: 'Lembang, Bandung', members: 15 }
+        ];
+
+        // Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            setupMobileMenu();
+            renderSimInitialResult();
+            renderFarmerTable();
+            renderBuyerCatalog(buyerCatalog);
+            renderAdminVerifications();
+            initCharts();
+        });
+
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+        }
+
+        // Role Tab Switcher
+        function switchRoleTab(role) {
+            const petaniBtn = document.getElementById('tab-petani-btn');
+            const pembeliBtn = document.getElementById('tab-pembeli-btn');
+            const adminBtn = document.getElementById('tab-admin-btn');
+
+            const petaniPortal = document.getElementById('portal-petani');
+            const pembeliPortal = document.getElementById('portal-pembeli');
+            const adminPortal = document.getElementById('portal-admin');
+
+            // Reset tab styles
+            [petaniBtn, pembeliBtn, adminBtn].forEach(b => {
+                b.className = "px-5 py-3 rounded-xl font-bold text-sm text-slate-600 hover:text-agri-600 transition-all flex items-center gap-2 whitespace-nowrap";
+            });
+
+            // Hide all portals
+            petaniPortal.classList.add('hidden');
+            pembeliPortal.classList.add('hidden');
+            adminPortal.classList.add('hidden');
+
+            if (role === 'petani') {
+                petaniBtn.className = "px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap bg-agri-600 text-white shadow-md";
+                petaniPortal.classList.remove('hidden');
+            } else if (role === 'pembeli') {
+                pembeliBtn.className = "px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap bg-earth-500 text-white shadow-md";
+                pembeliPortal.classList.remove('hidden');
+            } else {
+                adminBtn.className = "px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap bg-slate-900 text-white shadow-md";
+                adminPortal.classList.remove('hidden');
+            }
+        }
+
+        // Simulation Controller
+        function setSimRole(role) {
+            simRole = role;
+            const farmerBtn = document.getElementById('role-farmer-btn');
+            const buyerBtn = document.getElementById('role-buyer-btn');
+            if (role === 'farmer') {
+                farmerBtn.className = "py-2 px-3 rounded-xl text-xs font-bold bg-agri-600 text-white border border-agri-500 transition-all";
+                buyerBtn.className = "py-2 px-3 rounded-xl text-xs font-bold bg-slate-700 text-slate-300 hover:bg-slate-600 border border-slate-600 transition-all";
+            } else {
+                buyerBtn.className = "py-2 px-3 rounded-xl text-xs font-bold bg-earth-500 text-white border border-earth-400 transition-all";
+                farmerBtn.className = "py-2 px-3 rounded-xl text-xs font-bold bg-slate-700 text-slate-300 hover:bg-slate-600 border border-slate-600 transition-all";
+            }
+        }
+
+        function renderSimInitialResult() {
+            const resultsDiv = document.getElementById('sim-results');
+            resultsDiv.innerHTML = `
+                <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-700 space-y-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-agri-900 text-agri-300 border border-agri-700 uppercase">Match Tertinggi Found</span>
+                            <h4 class="text-lg font-bold text-white mt-1">Restoran Sambal Solaria (Bandung Hub)</h4>
+                            <p class="text-xs text-slate-400">Jarak Logistik: <strong>14.2 Km</strong> &bull; Estimasi Pengiriman: <strong>45 Menit</strong></p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xl font-black text-agri-400">98.5%</span>
+                            <div class="text-[10px] text-slate-400">Match Accuracy</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 pt-3 border-t border-slate-800 text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[10px]">Volume Ditampung</span>
+                            <strong class="text-white">500 Kg Full</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[10px]">Harga Match / Kg</span>
+                            <strong class="text-agri-400">Rp 34.000</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[10px]">Penyelamatan Limbah</span>
+                            <strong class="text-earth-500">100% Zero-Waste</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-700/60 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-white">Alternatif Pembeli #2: Katering Berkah (Bandung)</div>
+                        <div class="text-[11px] text-slate-400">Jarak 18 Km &bull; Rp 33.500/kg &bull; Match 94%</div>
+                    </div>
+                    <button onclick="showToast('Konfirmasi komitmen matching berhasil dikirim ke Katering Berkah!', 'success')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-700 hover:bg-slate-600 text-white transition-all">
+                        Pilih Match
+                    </button>
+                </div>
+            `;
+        }
+
+        function runSimulation(e) {
+            e.preventDefault();
+            const commodity = document.getElementById('sim-commodity').value;
+            const location = document.getElementById('sim-location').value;
+            const volume = document.getElementById('sim-volume').value;
+            const grade = document.getElementById('sim-grade').value;
+            const radius = document.getElementById('sim-radius').value;
+
+            const loader = document.getElementById('sim-loader');
+            const resultsDiv = document.getElementById('sim-results');
+            const statusTag = document.getElementById('sim-status-tag');
+
+            loader.classList.remove('hidden');
+            resultsDiv.classList.add('hidden');
+            statusTag.innerText = "Matching Algorithm Running...";
+            statusTag.className = "px-3 py-1 rounded-full text-xs font-bold bg-agri-900 text-agri-300 border border-agri-700 animate-pulse";
+
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                resultsDiv.classList.remove('hidden');
+                statusTag.innerText = "Match Multi-Target Selesai";
+                statusTag.className = "px-3 py-1 rounded-full text-xs font-bold bg-green-900 text-green-300 border border-green-700";
+
+                const calculatedMatchScore = Math.floor(Math.random() * 5) + 95;
+                const estPrice = commodity.includes('Beras') ? 16500 : commodity.includes('Bawang') ? 29000 : 35000;
+                const buyerName = simRole === 'farmer' 
+                    ? (location === 'Brebes' ? 'Supermarket Hero Distribution Center' : 'Jaringan Restoran Sunda Sambal Nusantara')
+                    : 'Poktan Tani Jaya Subur (' + location + ')';
+
+                resultsDiv.innerHTML = `
+                    <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-agri-950 border border-agri-500/30 space-y-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-agri-500 text-slate-950 uppercase">Rekomendasi Terbaik</span>
+                                <h4 class="text-lg font-bold text-white mt-1">${buyerName}</h4>
+                                <p class="text-xs text-slate-300">Terdeteksi dalam Radius <strong>${Math.floor(radius/2)} Km</strong> dari lokasi ${location}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-2xl font-black text-agri-400">${calculatedMatchScore}%</span>
+                                <div class="text-[10px] text-slate-400">Match Score</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-slate-800 text-xs">
+                            <div>
+                                <span class="text-slate-400 block text-[10px]">Komoditas</span>
+                                <strong class="text-white">${commodity}</strong>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block text-[10px]">Grade & Volume</span>
+                                <strong class="text-white">${grade.split(' ')[0]} (${volume} Kg)</strong>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block text-[10px]">Patokan Harga Match</span>
+                                <strong class="text-agri-400">Rp ${estPrice.toLocaleString('id-ID')}/kg</strong>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block text-[10px]">Estimasi Hemat Biaya</span>
+                                <strong class="text-earth-400">-32% Logistik</strong>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 flex gap-3">
+                            <button onclick="showToast('Permintaan penjemputan logistik otomatis dijadwalkan!', 'success')" class="flex-1 py-2.5 rounded-xl font-bold text-xs bg-agri-600 hover:bg-agri-500 text-white transition-all shadow-md">
+                                <i class="fa-solid fa-handshake mr-1"></i> Mulai Transaksi Direct
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-700 flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-white">Alternatif Match #2: Koperasi Pasar Regional ${location}</div>
+                            <div class="text-[11px] text-slate-400">Jarak ${Math.floor(radius * 0.8)} Km &bull; Rp ${(estPrice - 1000).toLocaleString('id-ID')}/kg &bull; Match 92%</div>
+                        </div>
+                        <button onclick="showToast('Opsi alternatif match dipilih.', 'info')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-700 hover:bg-slate-600 text-white transition-all">
+                            Pilih
+                        </button>
+                    </div>
+                `;
+            }, 1200);
+        }
+
+        // Render Farmers Table
+        function renderFarmerTable() {
+            const tbody = document.getElementById('petani-harvest-table');
+            tbody.innerHTML = harvestList.map(item => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="p-4 font-bold text-slate-900">${item.commodity}</td>
+                    <td class="p-4">
+                        <span class="font-semibold text-slate-800">${item.volume.toLocaleString('id-ID')} Kg</span>
+                        <span class="block text-[11px] text-slate-400">${item.grade}</span>
+                    </td>
+                    <td class="p-4 text-xs font-medium text-slate-600">${item.date}</td>
+                    <td class="p-4 font-bold text-agri-700">Rp ${item.price.toLocaleString('id-ID')}/kg</td>
+                    <td class="p-4">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-agri-50 text-agri-700 border border-agri-200">
+                            <i class="fa-solid fa-bolt text-[10px]"></i> ${item.match}
+                        </span>
+                        <span class="block text-[10px] text-slate-400 mt-0.5">Jarak: ${item.matchDistance}</span>
+                    </td>
+                    <td class="p-4 text-right">
+                        <button onclick="acceptFarmerMatch('${item.commodity}')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-agri-600 hover:bg-agri-700 text-white shadow-sm transition-all">
+                            Terima & Atur Logistik
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('petani-stat-total').innerText = `${harvestList.length} Lot (${harvestList.reduce((acc, curr) => acc + curr.volume, 0).toLocaleString('id-ID')} Kg)`;
+        }
+
+        function acceptFarmerMatch(commodityName) {
+            showToast(`Pesanan untuk ${commodityName} disetujui! Truk armada logistik dijadwalkan menjemput.`, 'success');
+        }
+
+        // Modal Farmers Harvest Output
+        function openHarvestModal() {
+            document.getElementById('harvest-modal').classList.remove('hidden');
+        }
+        function closeHarvestModal() {
+            document.getElementById('harvest-modal').classList.add('hidden');
+        }
+        function submitNewHarvest(e) {
+            e.preventDefault();
+            const name = document.getElementById('modal-harvest-name').value;
+            const vol = parseInt(document.getElementById('modal-harvest-vol').value);
+            const grade = document.getElementById('modal-harvest-grade').value;
+            const price = parseInt(document.getElementById('modal-harvest-price').value);
+            const date = document.getElementById('modal-harvest-date').value;
+
+            const newItem = {
+                id: Date.now(),
+                commodity: name,
+                volume: vol,
+                grade: grade,
+                date: date,
+                price: price,
+                match: 'Supermarket Papaya (97%)',
+                matchDistance: '15 km'
+            };
+
+            harvestList.unshift(newItem);
+            renderFarmerTable();
+            closeHarvestModal();
+            showToast('Panen baru berhasil didaftarkan! Algoritma matching langsung memindai pembeli.', 'success');
+        }
+
+        // Buyer Marketplace Portal
+        function renderBuyerCatalog(items) {
+            const grid = document.getElementById('buyer-catalog-grid');
+            if (items.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 text-sm">Tidak ada komoditas pasokan yang cocok dengan kriteria filter.</div>`;
+                return;
+            }
+
+            grid.innerHTML = items.map(item => `
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-lg hover:border-agri-300 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-700 border border-slate-200">
+                                <i class="fa-solid fa-location-dot text-agri-600 mr-1"></i> ${item.distance} Km Terdekat
+                            </span>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-agri-50 text-agri-700 border border-agri-200">
+                                ${item.grade}
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-lg mb-1">${item.name}</h4>
+                        <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-user-farmer mr-1"></i> ${item.farmer}</p>
+                        
+                        <div class="space-y-1 py-3 border-y border-slate-100 text-xs">
+                            <div class="flex justify-between text-slate-600">
+                                <span>Tersedia:</span>
+                                <strong class="text-slate-800">${item.volAvailable}</strong>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span>Jadwal Panen:</span>
+                                <strong class="text-slate-800">${item.harvestDate}</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-2 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block uppercase font-bold">Harga Patokan</span>
+                            <span class="text-base font-extrabold text-agri-700">Rp ${item.price.toLocaleString('id-ID')}<span class="text-xs font-normal text-slate-500">/kg</span></span>
+                        </div>
+                        <button onclick="orderBuyerItem('${item.name}')" class="px-4 py-2 rounded-xl text-xs font-bold bg-earth-500 hover:bg-earth-700 text-white shadow-sm transition-all">
+                            Pesan Grosir
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterBuyerCatalog() {
+            const query = document.getElementById('buyer-search-input').value.toLowerCase();
+            const maxRadius = document.getElementById('buyer-radius-filter').value;
+            const selectedGrade = document.getElementById('buyer-grade-filter').value;
+
+            const filtered = buyerCatalog.filter(item => {
+                const matchQuery = item.name.toLowerCase().includes(query) || item.farmer.toLowerCase().includes(query);
+                const matchRadius = maxRadius === 'all' || item.distance <= parseInt(maxRadius);
+                const matchGrade = selectedGrade === 'all' || item.grade.includes(selectedGrade);
+                return matchQuery && matchRadius && matchGrade;
+            });
+
+            renderBuyerCatalog(filtered);
+        }
+
+        function orderBuyerItem(itemName) {
+            showToast(`Kontrak pesanan grosir untuk "${itemName}" berhasil diajukan ke Petani!`, 'success');
+        }
+
+        function openBuyerDemandModal() {
+            showToast('Form Unggah Kebutuhan Pembeli Siap Diumpan ke Engine Match!', 'info');
+        }
+
+        // Admin Verifications
+        function renderAdminVerifications() {
+            const container = document.getElementById('admin-verify-list');
+            container.innerHTML = adminVerifications.map(item => `
+                <div class="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+                    <div>
+                        <div class="font-bold text-slate-800">${item.groupName}</div>
+                        <div class="text-[11px] text-slate-500">${item.location} &bull; ${item.commodity} (${item.members} Anggota)</div>
+                    </div>
+                    <button onclick="verifyProducer(${item.id})" class="px-3 py-1.5 rounded-lg font-bold bg-green-50 hover:bg-green-100 text-green-700 border border-green-300 transition-all">
+                        Verifikasi
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function verifyProducer(id) {
+            adminVerifications = adminVerifications.filter(a => a.id !== id);
+            renderAdminVerifications();
+            showToast('Produsen berhasil diverifikasi dan aktif dalam algoritma matching!', 'success');
+        }
+
+        // Toast Notification System
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const bgColor = type === 'success' ? 'bg-agri-800 border-agri-600' : 'bg-slate-900 border-slate-700';
+            const icon = type === 'success' ? 'fa-circle-check text-agri-400' : 'fa-circle-info text-blue-400';
+
+            toast.className = `pointer-events-auto p-4 rounded-2xl ${bgColor} text-white text-xs font-semibold shadow-2xl border flex items-center gap-3 transform translate-y-4 opacity-0 transition-all duration-300 max-w-md`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} text-base"></i>
+                <span class="flex-1">${message}</span>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Initialize Charts
+        function initCharts() {
+            // Price Comparison Chart
+            const ctxPrice = document.getElementById('priceComparisonChart').getContext('2d');
+            new Chart(ctxPrice, {
+                type: 'bar',
+                data: {
+                    labels: ['Cabai Keriting', 'Bawang Merah', 'Beras Pandan', 'Tomat Hydro', 'Jagung Manis'],
+                    datasets: [
+                        {
+                            label: 'Pasar Tengkulak Konvensional (Rp)',
+                            data: [24000, 20000, 13000, 9500, 6500],
+                            backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                            borderRadius: 8
+                        },
+                        {
+                            label: 'AGRIMATCH Fair Price Petani (Rp)',
+                            data: [34000, 28000, 16500, 14000, 9500],
+                            backgroundColor: 'rgba(34, 197, 94, 0.85)',
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans', size: 11 } }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    }
+                }
+            });
+
+            // Admin Regional Supply vs Demand Chart
+            const ctxAdmin = document.getElementById('adminBalanceChart').getContext('2d');
+            new Chart(ctxAdmin, {
+                type: 'line',
+                data: {
+                    labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+                    datasets: [
+                        {
+                            label: 'Total Pasokan Panen (Ton)',
+                            data: [320, 450, 410, 580],
+                            borderColor: '#16a34a',
+                            backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Permintaan Pembeli B2B (Ton)',
+                            data: [310, 430, 440, 560],
+                            borderColor: '#d97706',
+                            borderDash: [5, 5],
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { font: { family: 'Plus Jakarta Sans', size: 11 } }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { grid: { color: '#f1f5f9' } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
