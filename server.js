@@ -2,7 +2,7 @@ const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
 
-const host = process.env.HOST || "127.0.0.1";
+const host = process.env.HOST || "0.0.0.0";
 const port = Number(process.env.PORT) || 8000;
 const clientPath = path.join(__dirname, "app.js");
 
@@ -14,6 +14,12 @@ const server = http.createServer((request, response) => {
     }
 
     const pathname = new URL(request.url, `http://${host}`).pathname;
+    if (pathname === "/healthz") {
+        response.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+        response.end(request.method === "HEAD" ? undefined : "ok");
+        return;
+    }
+
     if (pathname === "/app.js") {
         fs.readFile(clientPath, (error, contents) => {
             if (error) {
