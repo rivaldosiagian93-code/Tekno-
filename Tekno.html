@@ -504,6 +504,7 @@
             { id: 5, name: "Beras pandan wangi", category: "Beras", location: "Cianjur", seller: "Koperasi Tani Cianjur", price: 16500, stock: 500, unit: "kg", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=850&q=80", description: "Beras pandan wangi dari petani Cianjur, tersedia untuk pembelian partai kecil maupun pasokan rutin." },
             { id: 6, name: "Sayuran panen kebun", category: "Sayuran", location: "Bandung", seller: "Tani Lembang Sejahtera", price: 16000, stock: 60, unit: "kg", image: "https://images.unsplash.com/photo-1518843875459-f738682238a6?auto=format&fit=crop&w=850&q=80", description: "Hasil kebun lokal yang berubah mengikuti musim. Hubungi pemasok untuk menanyakan daftar panen terbaru." }
         ];
+        const farmerListings = products.slice(0, 3);
         let currentProduct = products[0];
         const formatRupiah = value => "Rp" + Number(value).toLocaleString("id-ID");
         const escapeHtml = value => {
@@ -544,10 +545,10 @@
                 </article>`).join("") : `<div class="panel muted" style="font-size:12px">Belum ada pasokan yang cocok. Coba ubah kata kunci atau filter lokasi.</div>`;
         }
         function renderDashboard() {
-            document.getElementById("dashboard-list").innerHTML = products.slice(0, 3).map(product => `
+            document.getElementById("dashboard-list").innerHTML = farmerListings.map(product => `
                 <tr><td><strong>${escapeHtml(product.name)}</strong></td><td>${product.stock} ${escapeHtml(product.unit)}</td>
                 <td>${formatRupiah(product.price)}</td><td>${escapeHtml(product.location)}</td><td><span class="tag">Tersedia</span></td></tr>`).join("");
-            document.getElementById("stat-products").textContent = `${products.slice(0, 3).length} komoditas`;
+            document.getElementById("stat-products").textContent = `${farmerListings.length} komoditas`;
         }
         function showPage(page, updateHash = true) {
             const available = ["home", "catalog", "detail", "demand", "dashboard", "login"];
@@ -624,7 +625,7 @@
         document.getElementById("listing-form").addEventListener("submit", event => {
             event.preventDefault();
             const data = new FormData(event.currentTarget);
-            products.push({
+            const newListing = {
                 id: Date.now(),
                 name: String(data.get("name")).trim(),
                 category: "Sayuran",
@@ -635,7 +636,9 @@
                 unit: "kg",
                 image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=850&q=80",
                 description: "Hasil panen lokal baru dari Kelompok Tani Balijaya."
-            });
+            };
+            products.push(newListing);
+            farmerListings.push(newListing);
             renderDashboard();
             renderCatalog();
             event.currentTarget.reset();
