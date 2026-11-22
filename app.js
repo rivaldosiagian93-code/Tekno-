@@ -273,6 +273,8 @@ const css = `
     .brand-caption { display: block; margin-top: -3px; color: var(--muted); font-size: 8px; font-weight: 500; letter-spacing: 0; }
     .nav-links { gap: clamp(18px, 4vw, 48px); font-size: 12px; }
     .nav-actions { gap: 20px; }
+    #guest-actions, #signed-in-actions { display: flex; align-items: center; gap: 10px; }
+    #account-name { max-width: 180px; overflow: hidden; color: var(--green-900); font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
     .button { min-height: 37px; border-radius: 6px; font-size: 12px; }
     .button-outline { border-color: transparent; background: transparent; }
     .hero { padding: 16px 0 31px; }
@@ -280,7 +282,7 @@ const css = `
     .hero-copy { max-width: 460px; padding-left: 18px; }
     .hero h1 { margin-bottom: 10px; font-size: clamp(35px, 4vw, 48px); line-height: 1.26; }
     .hero h1 span { color: inherit; }
-    .hero-copy > p:not(.eyebrow) { max-width: 470px; margin-bottom: 25px; color: var(--muted); font-size: 14px; }
+    .hero-copy > p:not(.eyebrow) { max-width: 470px; margin-bottom: Colombis comats a krisharnask25px; color: var(--muted); font-size: 14px; }
     .hero .eyebrow { font-size: 10px; }
     .hero-image { min-height: 265px; border-radius: 11px; }
     .image-note { right: 12px; bottom: 11px; left: 12px; padding: 11px 13px; }
@@ -432,8 +434,68 @@ const css = `
     .login-art { padding: 38px clamp(25px, 7vw, 95px); }
     .login-form h2 { font-size: 25px; }
     .login-form .field { background: var(--green-50); }
+    .landing-hero { padding: 66px 0 35px; background: linear-gradient(120deg, #f8faf3 0%, #fff 62%); }
+    .landing-hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 48px; }
+    .landing-copy { max-width: 560px; }
+    .landing-copy .eyebrow { display: inline-flex; align-items: center; gap: 7px; padding: 8px 13px; border-radius: 30px; background: #e8f2e5; letter-spacing: 0; text-transform: none; font-size: 12px; }
+    .landing-copy h1 { margin: 17px 0 18px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(42px, 5vw, 65px); line-height: 1.08; letter-spacing: -.045em; }
+    .landing-copy h1 em { color: #43885a; font-style: normal; }
+    .landing-copy > p:not(.eyebrow) { max-width: 520px; color: #68776a; font-size: 15px; line-height: 1.8; }
+    .landing-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0; }
+    .landing-actions .button { min-height: 45px; padding: 12px 19px; }
+    .landing-hero-visual { position: relative; min-height: 370px; border: 12px solid #fff; border-radius: 25px; background: #e9f0e2 url("https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=85") center / cover; box-shadow: 0 20px 55px rgba(27,55,37,.12); }
+    .landing-hero-visual::after { position: absolute; inset: 45% 0 0; content: ""; border-radius: 0 0 13px 13px; background: linear-gradient(transparent, rgba(10,36,23,.4)); }
+    .landing-hero-label { position: absolute; z-index: 1; right: 12px; bottom: 12px; left: 12px; padding: 15px 18px; border-radius: 10px; color: var(--green-950); background: rgba(255,255,255,.96); font-size: 13px; font-weight: 750; }
+    .landing-trust { display: flex; flex-wrap: wrap; gap: 10px 18px; color: #536c59; font-size: 11px; font-weight: 650; }
+    .landing-trust span::first-letter { color: #43885a; }
+    .landing-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 21px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .landing-stat { display: grid; justify-items: center; gap: 3px; padding: 5px; text-align: center; }
+    .landing-stat strong { color: var(--green-900); font-family: Georgia, "Times New Roman", serif; font-size: 25px; }
+    .landing-stat span { color: var(--muted); font-size: 11px; }
+    .landing-section { padding: 54px 0; }
+    .landing-section-heading { max-width: 600px; margin: 0 auto 25px; text-align: center; }
+    .landing-section-heading h2 { margin: 0 0 9px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3vw, 34px); }
+    .landing-section-heading p:not(.eyebrow) { margin: 0; color: var(--muted); font-size: 13px; }
+    .landing-category-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .landing-category { display: flex; align-items: center; gap: 12px; min-height: 70px; padding: 13px; border: 1px solid var(--line); border-radius: 11px; background: #fff; color: var(--green-950); font-size: 12px; font-weight: 700; transition: transform .2s, box-shadow .2s; }
+    .landing-category:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .landing-category-icon { display: grid; width: 40px; height: 40px; flex: 0 0 40px; place-items: center; border-radius: 10px; background: var(--green-50); font-size: 20px; }
+    .landing-category-arrow { margin-left: auto; color: var(--green-700); }
+    .landing-featured { background: #fbfcf9; }
+    .landing-featured .section-heading { align-items: end; }
+    .landing-featured .product-card { overflow: hidden; border: 1px solid var(--line); }
+    .landing-featured .product-info { padding: 11px; }
+    .landing-featured .product-photo { height: 150px; }
+    .landing-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .landing-step { padding: 21px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+    .landing-step-number { display: grid; width: 38px; height: 38px; place-items: center; margin-bottom: 15px; border-radius: 50%; color: white; background: var(--green-700); font-weight: 800; }
+    .landing-step h3 { font-size: 15px; }
+    .landing-step p { margin: 0; color: var(--muted); font-size: 12px; }
+    .landing-seller { padding: 43px; border-radius: 18px; color: white; background: var(--green-950); }
+    .landing-seller-grid { display: grid; grid-template-columns: 1.15fr .85fr; align-items: center; gap: 38px; }
+    .landing-seller .eyebrow { color: #c4d6b3; }
+    .landing-seller h2 { max-width: 500px; margin: 8px 0 15px; color: white; font-family: Georgia, "Times New Roman", serif; font-size: clamp(27px, 3vw, 38px); }
+    .landing-seller p, .landing-seller li { color: #d3e0d4; font-size: 12px; }
+    .landing-seller ul { display: grid; gap: 9px; padding: 0; list-style: none; }
+    .landing-seller li::before { content: "✓"; margin-right: 9px; color: #c6df9c; }
+    .landing-seller-card { padding: 24px; border-radius: 12px; color: var(--ink); background: white; }
+    .landing-seller-card span, .landing-seller-card strong { display: block; }
+    .landing-seller-card span { color: var(--muted); font-size: 11px; }
+    .landing-seller-card strong { margin: 5px 0; color: var(--green-800); font-size: 20px; }
+    .landing-seller-card p { margin: 0; color: var(--muted); font-size: 11px; }
+    .landing-benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .landing-benefit { padding: 18px; border: 1px solid var(--line); border-radius: 11px; background: white; }
+    .landing-benefit strong { display: block; margin-bottom: 6px; color: var(--green-900); font-size: 13px; }
+    .landing-benefit p { margin: 0; color: var(--muted); font-size: 11px; }
+    .landing-final-cta { padding: 39px 24px; border-radius: 16px; background: #edf3e7; text-align: center; }
+    .landing-final-cta h2 { margin: 7px auto 10px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(25px, 3vw, 34px); }
+    .landing-final-cta p { max-width: 520px; margin: 0 auto 18px; color: var(--muted); font-size: 12px; }
     @media (max-width: 800px) {
         .hero-grid { gap: 25px; }
+        .landing-hero { padding-top: 42px; }
+        .landing-hero-grid { gap: 25px; }
+        .landing-hero-visual { min-height: 310px; }
+        .landing-category-grid { grid-template-columns: repeat(2, 1fr); }
         .catalog-search-form { grid-template-columns: repeat(3, 1fr); }
         .catalog-row { grid-template-columns: 100px 1fr 130px; gap: 10px; }
         .catalog-row img { width: 100px; }
@@ -448,6 +510,21 @@ const css = `
         .nav-actions .button:not(.button-outline) { display: none; }
         .nav-links { top: 57px; flex-direction: column; gap: 0; }
         .hero { padding: 28px 0 22px; }
+        .landing-hero { padding: 30px 0 24px; }
+        .landing-hero-grid, .landing-seller-grid { grid-template-columns: 1fr; gap: 22px; }
+        .landing-copy h1 { max-width: 440px; font-size: 42px; }
+        .landing-copy > p:not(.eyebrow) { font-size: 13px; }
+        .landing-hero-visual { min-height: 245px; border-width: 8px; border-radius: 17px; }
+        .landing-stats { grid-template-columns: repeat(2, 1fr); gap: 7px; }
+        .landing-stat strong { font-size: 21px; }
+        .landing-section { padding: 36px 0; }
+        .landing-category-grid { gap: 8px; }
+        .landing-category { min-height: 62px; gap: 8px; padding: 9px; font-size: 10px; }
+        .landing-category-icon { width: 34px; height: 34px; flex-basis: 34px; font-size: 17px; }
+        .landing-steps, .landing-benefits { grid-template-columns: 1fr; gap: 10px; }
+        .landing-seller { padding: 22px; }
+        .landing-seller h2 { font-size: 29px; }
+        .landing-final-cta { padding: 28px 18px; }
         .hero-grid { grid-template-columns: 1fr; gap: 20px; }
         .hero-copy { padding: 0; }
         .hero h1 { max-width: 370px; font-size: 36px; }
@@ -506,6 +583,8 @@ const css = `
         .login-view { grid-template-columns: 1fr; }
         .login-art { min-height: 240px; padding: 22px; }
         .login-art h1 { margin: 25px 0 9px; font-size: 30px; }
+        #guest-actions .button:not(.button-outline), #signed-in-actions [data-logout] { display: inline-flex; }
+        #account-name { max-width: 110px; }
     }
 `;
 
@@ -533,69 +612,85 @@ app.innerHTML = `
             </a>
             <nav class="nav-links" id="nav-links" aria-label="Navigasi utama">
                 <a href="#home" data-route="home">Beranda</a>
-                <a href="#catalog" data-route="catalog">Cari pemasok</a>
+                <a href="#catalog" data-route="catalog">Katalog</a>
                 <a href="#how" data-anchor="how">Cara kerja</a>
-                <a href="#help" data-anchor="help">Bantuan</a>
+                <a href="#about" data-anchor="about">Tentang kami</a>
                 <a href="#orders" data-route="orders">Pesan</a>
             </nav>
-            <div class="nav-actions">
+            <div class="nav-actions" id="nav-actions">
+                <div id="guest-actions">
                 <a class="button button-outline" href="#login" data-route="login">Masuk</a>
                 <a class="button" href="#register" data-route="register">Daftar gratis</a>
+                </div>
+                <div id="signed-in-actions" class="hidden"><span id="account-name"></span><button class="button button-outline button-small" type="button" data-logout>Keluar</button></div>
             </div>
             <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Buka menu" aria-expanded="false">Menu ☰</button>
         </div>
     </header>
     <main>
         <section class="view active" data-view="home">
-            <div class="shell hero">
-                <div class="hero-grid">
-                    <div class="hero-copy">
-                        <p class="eyebrow">Dari Toba, untuk usaha Anda</p>
-                        <h1>Panen lokal.<br>Pasokan yang<br>lebih cocok.</h1>
-                        <p>Temukan petani lokal untuk kebutuhan bahan baku usaha Anda. Cocokkan produk, jumlah, harga, lokasi, dan waktu dalam satu tempat.</p>
-                        <div class="hero-actions">
-                            <a class="button" href="#catalog" data-route="catalog">Temukan pemasok <span aria-hidden="true">→</span></a>
-                            <a class="button button-outline" href="#register" data-route="register" data-role="supplier">Saya pemasok</a>
+            <section class="landing-hero">
+                <div class="shell landing-hero-grid">
+                    <div class="landing-copy">
+                        <p class="eyebrow"><span aria-hidden="true">🌱</span> Pasar digital hasil bumi Toba</p>
+                        <h1>Hasil panen lokal, <em>peluang usaha</em> lebih besar.</h1>
+                        <p>AgriMatch menghubungkan petani dan kelompok tani Toba dengan rumah makan, katering, dan UMKM kuliner. Cari bahan baku segar langsung dari sumbernya, atau pasarkan panen Anda ke pembeli yang tepat.</p>
+                        <div class="landing-actions">
+                            <a class="button" href="#catalog" data-route="catalog">Jelajahi katalog <span aria-hidden="true">→</span></a>
+                            <a class="button button-outline" href="#register" data-route="register">Bergabung sekarang</a>
                         </div>
+                        <div class="landing-trust"><span>✓ Fokus wilayah Toba</span><span>✓ Langsung ke petani</span><span>✓ Harga transparan</span><span>✓ Komisi jelas</span></div>
                     </div>
-                    <div class="hero-image" role="img" aria-label="Hasil panen segar dari petani lokal">
-                        <div class="image-note"><strong>Segar dari kebun, dekat dengan usaha Anda.</strong></div>
+                    <div class="landing-hero-visual" role="img" aria-label="Sayuran segar dari petani Toba">
+                        <div class="landing-hero-label">Dari petani lokal untuk bisnis lokal</div>
                     </div>
                 </div>
-            </div>
-            <div class="search-band"><div class="shell">
-                <h3>Apa kebutuhan dapur usaha Anda?</h3>
-                <form id="home-search" class="search-form">
-                    <div class="search-control"><label for="home-product">Komoditas</label><select class="field" id="home-product" name="product"><option value="">Semua komoditas</option><option>Cabai keriting merah</option><option>Bawang merah</option><option>Tomat segar</option><option>Sayuran segar</option></select></div>
-                    <div class="search-control"><label for="home-quantity">Jumlah kebutuhan</label><input class="field" id="home-quantity" name="quantity" type="number" min="1" value="20" aria-label="Jumlah kebutuhan"></div>
-                    <div class="search-control"><label for="home-location">Lokasi pemasok</label><select class="field" id="home-location" name="location"><option>Kabupaten Toba</option><option>Balige</option><option>Laguboti</option><option>Porsea</option><option>Siantar Narumonda</option></select></div>
-                    <div class="search-control"><label for="home-date">Tanggal dibutuhkan</label><input class="field" id="home-date" name="date" type="date"></div>
-                    <button class="button" type="submit">Cari kecocokan →</button>
-                </form>
-            </div></div>
-            <section class="shell products-section">
-                <div class="section-heading"><div><p class="eyebrow">Hasil panen lokal</p><h2>Bahan segar untuk setiap menu.</h2></div><a class="text-link" href="#catalog" data-route="catalog">Jelajahi katalog ↗</a></div>
-                <div class="product-grid" id="home-products"></div>
-                <p class="catalog-note">Contoh produk dan harga untuk pratinjau desain.</p>
             </section>
-            <section class="steps-section" id="how"><div class="shell">
-                <div class="section-heading"><div><p class="eyebrow">Mudah dan langsung</p><h2>Dari mencari sampai sepakat.</h2></div></div>
-                <div class="steps-grid">
-                    <article class="step"><span class="step-number">01</span><div><h3>Ceritakan kebutuhan</h3><p>Tentukan bahan, jumlah, kisaran harga, lokasi, dan waktu kebutuhan.</p></div></article>
-                    <article class="step"><span class="step-number">02</span><div><h3>Temukan yang cocok</h3><p>Bandingkan ketersediaan dan hubungi pemasok secara langsung.</p></div></article>
-                    <article class="step"><span class="step-number">03</span><div><h3>Sepakati & pesan</h3><p>Konfirmasi pesanan, atur pembayaran, dan pengiriman bersama pemasok.</p></div></article>
+            <div class="shell landing-stats" aria-label="Ringkasan katalog">
+                <div class="landing-stat"><strong id="landing-stat-products">0</strong><span>Produk tersedia</span></div>
+                <div class="landing-stat"><strong id="landing-stat-sellers">0</strong><span>Penjual di katalog</span></div>
+                <div class="landing-stat"><strong id="landing-stat-categories">0</strong><span>Kategori komoditas</span></div>
+                <div class="landing-stat"><strong id="landing-stat-regions">0</strong><span>Wilayah panen</span></div>
+            </div>
+            <section class="landing-section"><div class="shell">
+                <div class="landing-section-heading"><p class="eyebrow">Kategori</p><h2>Semua kebutuhan bahan baku, satu atap.</h2><p>Temukan komoditas segar dari dataran tinggi Toba berdasarkan kategori yang Anda butuhkan.</p></div>
+                <div class="landing-category-grid">
+                    <a class="landing-category" href="#catalog" data-route="catalog"><span class="landing-category-icon">🥬</span>Sayuran<span class="landing-category-arrow">→</span></a>
+                    <a class="landing-category" href="#catalog" data-route="catalog"><span class="landing-category-icon">🍎</span>Buah-buahan<span class="landing-category-arrow">→</span></a>
+                    <a class="landing-category" href="#catalog" data-route="catalog"><span class="landing-category-icon">🌶️</span>Bumbu & rempah<span class="landing-category-arrow">→</span></a>
+                    <a class="landing-category" href="#catalog" data-route="catalog"><span class="landing-category-icon">🥔</span>Umbi-umbian<span class="landing-category-arrow">→</span></a>
+                    <a class="landing-category" href="#catalog" data-route="catalog"><span class="landing-category-icon">🥜</span>Kacang-kacangan<span class="landing-category-arrow">→</span></a>
+                    <a class="landing-category" href="#catalog" data-route="catalog"><span class="landing-category-icon">🌽</span>Biji-bijian<span class="landing-category-arrow">→</span></a>
+                    <a class="landing-category" href="#catalog" data-route="catalog"><span class="landing-category-icon">🍯</span>Hasil olahan<span class="landing-category-arrow">→</span></a>
+                    <a class="landing-category" href="#catalog" data-route="catalog"><span class="landing-category-icon">🧺</span>Lainnya<span class="landing-category-arrow">→</span></a>
                 </div>
             </div></section>
-            <section class="cta-band"><div class="shell cta-inner">
-                <div><p class="eyebrow">Untuk petani & kelompok tani</p><h2>Hasil panen Anda,<br>peluang pasar baru.</h2></div>
-                <div><p>Tampilkan hasil panen, perbarui stok, dan bangun hubungan dengan pembeli di sekitar Anda.</p><p>Daftar gratis. Komisi 3% hanya untuk transaksi selesai dan tercatat, dibebankan kepada pemasok.</p><a class="button button-gold" href="#register" data-route="register" data-role="supplier">Bergabung sebagai pemasok →</a></div>
+            <section class="landing-section landing-featured"><div class="shell">
+                <div class="section-heading"><div><p class="eyebrow">Produk unggulan</p><h2>Panen terbaru dari kebun Toba.</h2></div><a class="text-link" href="#catalog" data-route="catalog">Lihat semua produk →</a></div>
+                <div class="product-grid" id="home-products"></div>
             </div></section>
+            <section class="landing-section" id="how"><div class="shell">
+                <div class="landing-section-heading"><p class="eyebrow">Cara kerja</p><h2>Tiga langkah menuju kesepakatan.</h2><p>Dirancang sederhana agar petani dan pembeli sama-sama diuntungkan.</p></div>
+                <div class="landing-steps">
+                    <article class="landing-step"><span class="landing-step-number">1</span><h3>Daftar sebagai pembeli atau penjual</h3><p>Pilih peran yang sesuai dan buat akun gratis untuk memulai.</p></article>
+                    <article class="landing-step"><span class="landing-step-number">2</span><h3>Temukan hasil panen yang cocok</h3><p>Cari produk berdasarkan nama, harga, jumlah stok, dan lokasi pemasok.</p></article>
+                    <article class="landing-step"><span class="landing-step-number">3</span><h3>Hubungi pemasok dan sepakati pesanan</h3><p>Atur pembayaran dan pengiriman langsung bersama penjual.</p></article>
+                </div>
+            </div></section>
+            <section class="landing-section"><div class="shell landing-seller">
+                <div class="landing-seller-grid">
+                    <div><p class="eyebrow">Untuk penjual & petani</p><h2>Pasarkan panen Anda langsung ke pembeli.</h2><ul><li>Tampilkan produk dan perbarui stok</li><li>Jangkau UMKM kuliner di sekitar Toba</li><li>Pendaftaran gratis tanpa biaya tersembunyi</li><li>Komisi hanya untuk transaksi selesai</li></ul><div class="landing-actions"><a class="button button-gold" href="#register" data-route="register" data-role="supplier">Buka toko gratis →</a><a class="button button-outline" href="#login" data-route="login">Masuk sebagai penjual</a></div></div>
+                    <div class="landing-seller-card"><span>Komisi platform</span><strong>3% per transaksi selesai</strong><p>Komisi dicatat pada transaksi yang sudah selesai. Pembayaran dan pengiriman disepakati langsung oleh pembeli dan penjual.</p></div>
+                </div>
+            </div></section>
+            <section class="landing-section" id="about"><div class="shell">
+                <div class="landing-section-heading"><p class="eyebrow">Mengapa AgriMatch?</p><h2>Lebih dekat, lebih transparan.</h2></div>
+                <div class="landing-benefits"><article class="landing-benefit"><strong>🌿 Fokus hasil bumi Toba</strong><p>Temukan pemasok dan komoditas lokal dari wilayah Kabupaten Toba.</p></article><article class="landing-benefit"><strong>🤝 Terhubung langsung</strong><p>Pembeli dan petani dapat membicarakan kebutuhan secara langsung.</p></article><article class="landing-benefit"><strong>💚 Informasi terbuka</strong><p>Lihat harga, jumlah stok, lokasi, dan tanggal ketersediaan produk.</p></article></div>
+            </div></section>
+            <section class="landing-section"><div class="shell landing-final-cta"><p class="eyebrow">Mulai sekarang</p><h2>Hubungkan panen dengan peluang baru.</h2><p>Bergabung sebagai pembeli atau penjual dan mulai jelajahi hasil bumi lokal Toba.</p><a class="button" href="#register" data-route="register">Buat akun gratis →</a></div></section>
             <section class="faq-section" id="help"><div class="shell faq-grid">
-                <div><h2>Ada yang ingin ditanyakan?</h2><p class="muted" style="font-size:11px">Saya siap membantu Anda memulai.</p><a class="button button-soft" href="#orders" data-route="orders">Lihat pusat bantuan ↗</a></div>
-                <div class="faq-list">
-                    <div><strong>Apakah AgriMatch menjual produk langsung?</strong><p>Tidak. AgriMatch mempertemukan pemasok dan pembeli.</p></div>
-                    <div><strong>Bagaimana pembayaran dan pengirimannya?</strong><p>Keduanya disepakati langsung dengan pemasok. AgriMatch tidak menyediakan layanan pembayaran atau logistik.</p></div>
-                </div>
+                <div><h2>Ada yang ingin ditanyakan?</h2><p class="muted" style="font-size:11px">Panduan singkat untuk memulai.</p><a class="button button-soft" href="#catalog" data-route="catalog">Jelajahi katalog ↗</a></div>
+                <div class="faq-list"><div><strong>Apakah AgriMatch menjual produk langsung?</strong><p>Tidak. AgriMatch mempertemukan pemasok dan pembeli.</p></div><div><strong>Bagaimana pembayaran dan pengirimannya?</strong><p>Pembayaran dan pengiriman disepakati langsung dengan pemasok.</p></div></div>
             </div></section>
             ${footerMarkup}
         </section>
@@ -670,7 +765,7 @@ app.innerHTML = `
         </section>
         <section class="view" data-view="dashboard">
             <div class="shell page-main">
-                <div class="dashboard-head"><div><h1>Selamat pagi, Kelompok Tani Balige.</h1><p>Kelola hasil panen dan peluang pesanan Anda hari ini.</p></div><button class="button" type="button" id="toggle-listing" aria-expanded="false">＋ Tambah produk</button></div>
+                <div class="dashboard-head"><div><h1 id="dashboard-title">Dasbor pemasok</h1><p>Kelola hasil panen dan peluang pesanan Anda hari ini.</p></div><button class="button" type="button" id="toggle-listing" aria-expanded="false">＋ Tambah produk</button></div>
                 <div class="dashboard-stats">
                     <div class="stat-card"><span>Produk aktif</span><strong id="stat-products">3 komoditas</strong></div>
                     <div class="stat-card"><span>Pesanan masuk</span><strong id="stat-orders">2 permintaan</strong></div>
@@ -708,7 +803,7 @@ app.innerHTML = `
                         <div><label for="register-email">Email</label><input class="field" id="register-email" name="email" type="email" placeholder="nama@contoh.com" required></div>
                         <div><label for="register-password">Kata sandi</label><input class="field" id="register-password" name="password" type="password" minlength="8" placeholder="Minimal 8 karakter" required></div>
                         <div><label for="register-referral">Kode referral (opsional)</label><input class="field" id="register-referral" name="referral" placeholder="Masukkan kode referral"></div>
-                    </div><p class="register-note">Dengan mendaftar, Anda menyetujui syarat penggunaan dan kebijakan privasi AgriMatch.</p><button class="button" id="register-submit" type="submit">Daftar sebagai pembeli →</button><p class="register-note">Tim akan mengonfirmasi pendaftaran sebelum akun dapat digunakan.</p></form>
+                    </div><p class="register-note">Dengan mendaftar, Anda menyetujui syarat penggunaan dan kebijakan privasi AgriMatch.</p><button class="button" id="register-submit" type="submit">Daftar sebagai pembeli →</button><p class="register-note">Akun dapat langsung digunakan setelah pendaftaran berhasil.</p></form>
                 </div>
             </div>
             ${footerMarkup}
@@ -750,6 +845,7 @@ let messages = readStoredArray(storageKeys.messages, []);
 let currentProduct = products[0] || productsSeed[0];
 let currentOrderFilter = "all";
 let registerRole = "buyer";
+let currentUser = null;
 let editingProductId = null;
 let toastTimer;
 
@@ -788,6 +884,29 @@ function showToast(message) {
     toastTimer = setTimeout(() => toast.classList.add("hidden"), 3600);
 }
 
+async function apiRequest(endpoint, options = {}) {
+    const response = await fetch(endpoint, {
+        credentials: "same-origin",
+        ...options,
+        headers: {
+            ...(options.body ? { "Content-Type": "application/json" } : {}),
+            ...options.headers
+        }
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "Permintaan tidak berhasil.");
+    return result;
+}
+
+function refreshAuthUI() {
+    document.getElementById("guest-actions").classList.toggle("hidden", Boolean(currentUser));
+    document.getElementById("signed-in-actions").classList.toggle("hidden", !currentUser);
+    document.getElementById("account-name").textContent = currentUser ? currentUser.business || currentUser.name : "";
+    document.getElementById("dashboard-title").textContent = currentUser
+        ? `Selamat datang, ${currentUser.business || currentUser.name}.`
+        : "Dasbor pemasok";
+}
+
 function saveState() {
     try {
         localStorage.setItem(storageKeys.products, JSON.stringify(products));
@@ -812,6 +931,10 @@ function productCard(product) {
 
 function renderHomeProducts() {
     document.getElementById("home-products").innerHTML = products.slice(0, 4).map(productCard).join("");
+    document.getElementById("landing-stat-products").textContent = String(products.length);
+    document.getElementById("landing-stat-sellers").textContent = String(new Set(products.map(product => product.seller).filter(Boolean)).size);
+    document.getElementById("landing-stat-categories").textContent = String(new Set(products.map(product => product.category).filter(Boolean)).size);
+    document.getElementById("landing-stat-regions").textContent = String(new Set(products.map(product => product.area || product.location).filter(Boolean)).size);
 }
 
 function renderCatalog() {
@@ -889,7 +1012,14 @@ function renderMessages() {
 
 function showPage(page, updateHash = true) {
     const available = ["home", "catalog", "detail", "orders", "dashboard", "login", "register"];
-    const selected = available.includes(page) ? page : "home";
+    let selected = available.includes(page) ? page : "home";
+    if (["orders", "dashboard"].includes(selected) && !currentUser) {
+        selected = "login";
+        showToast("Silakan masuk atau daftar untuk membuka halaman akun.");
+    } else if (selected === "dashboard" && currentUser.role !== "supplier") {
+        selected = "catalog";
+        showToast("Dasbor hanya tersedia untuk akun petani atau pemasok.");
+    }
     document.querySelectorAll("[data-view]").forEach(view => view.classList.toggle("active", view.dataset.view === selected));
     document.querySelectorAll(".nav-links [data-route]").forEach(link => {
         const active = link.dataset.route === selected;
@@ -1014,6 +1144,20 @@ document.addEventListener("click", event => {
         return;
     }
 
+    const logoutButton = event.target.closest("[data-logout]");
+    if (logoutButton) {
+        apiRequest("/api/logout", { method: "POST", body: "{}" }).then(() => {
+            currentUser = null;
+            refreshAuthUI();
+            showPage("home");
+            showToast("Anda berhasil keluar.");
+        }).catch(error => {
+            console.error("Tidak dapat mengakhiri sesi.", error);
+            showToast(error.message);
+        });
+        return;
+    }
+
     const anchorLink = event.target.closest("[data-anchor]");
     if (anchorLink) {
         event.preventDefault();
@@ -1029,16 +1173,6 @@ document.addEventListener("click", event => {
     }
 });
 
-document.getElementById("home-search").addEventListener("submit", event => {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    document.getElementById("catalog-product").value = form.get("product") || "";
-    document.getElementById("catalog-quantity").value = form.get("quantity") || "20";
-    document.getElementById("catalog-location").value = form.get("location") || "Kabupaten Toba";
-    document.getElementById("catalog-date").value = form.get("date") || dateAfter(7);
-    renderCatalog();
-    showPage("catalog");
-});
 document.getElementById("catalog-search-form").addEventListener("submit", event => {
     event.preventDefault();
     renderCatalog();
@@ -1057,10 +1191,20 @@ document.getElementById("menu-toggle").addEventListener("click", event => {
 
 document.getElementById("order-quantity").addEventListener("input", updateOrderTotal);
 document.getElementById("contact-supplier").addEventListener("click", () => {
-    showToast(`Kontak ${currentProduct.seller} tersedia setelah akun terhubung.`);
+    if (!currentUser) {
+        showToast("Masuk atau daftar untuk menghubungi pemasok.");
+        showPage("login");
+        return;
+    }
+    showToast("Fitur kontak langsung dengan pemasok belum tersedia.");
 });
 document.getElementById("order-form").addEventListener("submit", event => {
     event.preventDefault();
+    if (!currentUser) {
+        showToast("Masuk atau daftar untuk mengirim permintaan pesanan.");
+        showPage("login");
+        return;
+    }
     const form = new FormData(event.currentTarget);
     const quantity = Number(form.get("quantity"));
     if (quantity > currentProduct.stock) {
@@ -1078,7 +1222,7 @@ document.getElementById("order-form").addEventListener("submit", event => {
         total: quantity * currentProduct.price,
         status: "Menunggu konfirmasi",
         date: formatDate(form.get("date")),
-        buyer: "RM Dapur Toba",
+        buyer: currentUser.business || currentUser.name,
         createdAt: new Date().toISOString()
     };
     orders.unshift(order);
@@ -1091,6 +1235,11 @@ document.getElementById("order-form").addEventListener("submit", event => {
 
 document.getElementById("chat-form").addEventListener("submit", event => {
     event.preventDefault();
+    if (!currentUser) {
+        showToast("Masuk atau daftar untuk mengirim pesan.");
+        showPage("login");
+        return;
+    }
     const form = new FormData(event.currentTarget);
     messages.push({ text: String(form.get("message")).trim(), createdAt: new Date().toISOString() });
     saveState();
@@ -1107,6 +1256,11 @@ document.getElementById("toggle-listing").addEventListener("click", event => {
 
 document.getElementById("listing-form").addEventListener("submit", event => {
     event.preventDefault();
+    if (!currentUser || currentUser.role !== "supplier") {
+        showToast("Masuk dengan akun pemasok untuk mengelola produk.");
+        showPage("login");
+        return;
+    }
     const data = new FormData(event.currentTarget);
     const area = String(data.get("location")).trim();
     const fields = {
@@ -1114,7 +1268,7 @@ document.getElementById("listing-form").addEventListener("submit", event => {
         category: String(data.get("category")),
         location: "Kabupaten Toba",
         area,
-        seller: "Kelompok Tani Balige",
+        seller: currentUser.business || currentUser.name,
         price: Number(data.get("price")),
         stock: Number(data.get("stock")),
         unit: "kg",
@@ -1144,13 +1298,58 @@ document.getElementById("listing-form").addEventListener("submit", event => {
     document.getElementById("toggle-listing").setAttribute("aria-expanded", "false");
 });
 
-document.getElementById("register-form").addEventListener("submit", event => {
+document.getElementById("register-form").addEventListener("submit", async event => {
     event.preventDefault();
-    showToast(`Pendaftaran ${registerRole === "buyer" ? "pembeli" : "pemasok"} dicatat untuk demo. Akun belum diaktifkan.`);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
+    const button = document.getElementById("register-submit");
+    button.disabled = true;
+    try {
+        const result = await apiRequest("/api/register", {
+            method: "POST",
+            body: JSON.stringify({
+                name: form.get("name"),
+                business: form.get("business"),
+                phone: form.get("phone"),
+                email: form.get("email"),
+                password: form.get("password"),
+                role: registerRole
+            })
+        });
+        currentUser = result.user;
+        refreshAuthUI();
+        formElement.reset();
+        showToast("Akun berhasil dibuat. Selamat datang di AgriMatch!");
+        showPage(currentUser.role === "supplier" ? "dashboard" : "catalog");
+    } catch (error) {
+        console.error("Pendaftaran akun gagal.", error);
+        showToast(error.message);
+    } finally {
+        button.disabled = false;
+    }
 });
-document.getElementById("login-form").addEventListener("submit", event => {
+document.getElementById("login-form").addEventListener("submit", async event => {
     event.preventDefault();
-    showToast("Mode demo: layanan akun belum terhubung.");
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
+    const button = formElement.querySelector("button[type='submit']");
+    button.disabled = true;
+    try {
+        const result = await apiRequest("/api/login", {
+            method: "POST",
+            body: JSON.stringify({ email: form.get("email"), password: form.get("password") })
+        });
+        currentUser = result.user;
+        refreshAuthUI();
+        formElement.reset();
+        showToast("Anda berhasil masuk.");
+        showPage(currentUser.role === "supplier" ? "dashboard" : "catalog");
+    } catch (error) {
+        console.error("Login gagal.", error);
+        showToast(error.message);
+    } finally {
+        button.disabled = false;
+    }
 });
 
 window.addEventListener("popstate", () => {
@@ -1159,8 +1358,6 @@ window.addEventListener("popstate", () => {
     else showPage(page, false);
 });
 
-document.getElementById("home-date").min = todayLocal();
-document.getElementById("home-date").value = dateAfter(7);
 document.getElementById("catalog-date").min = todayLocal();
 document.getElementById("catalog-date").value = dateAfter(7);
 document.getElementById("order-date").min = todayLocal();
@@ -1169,7 +1366,17 @@ renderCatalog();
 renderDashboard();
 renderOrders();
 renderMessages();
-const initialPage = location.hash.slice(1);
-if (initialPage === "detail") openProduct(currentProduct.id, false);
-else if (["catalog", "orders", "dashboard", "login", "register"].includes(initialPage)) showPage(initialPage, false);
-else if (["how", "help"].includes(initialPage)) showAnchor(initialPage);
+(async function initializeApp() {
+    try {
+        const result = await apiRequest("/api/me");
+        currentUser = result.user;
+    } catch (error) {
+        console.error("Tidak dapat memeriksa sesi akun.", error);
+        showToast("Layanan akun belum terhubung. Katalog tetap dapat dibuka.");
+    }
+    refreshAuthUI();
+    const initialPage = location.hash.slice(1);
+    if (initialPage === "detail") openProduct(currentProduct.id, false);
+    else if (["catalog", "orders", "dashboard", "login", "register"].includes(initialPage)) showPage(initialPage, false);
+    else if (["how", "help"].includes(initialPage)) showAnchor(initialPage);
+})();
